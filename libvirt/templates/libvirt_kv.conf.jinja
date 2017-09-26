@@ -1,0 +1,10 @@
+# This file is managed by Salt, do not edit by Hand!!
+{%- for key,val in settings.iteritems() %}
+{%- if type(val) is int %}
+{{ key }} = {{ val }}
+{%- elif type(val) is str %}
+{{ key }} = "{{ val }}"
+{%- elif type(val) is list %}
+{{ key }} = [ {{ ",".join(val) }} ]
+{%- endif %}
+{%- endfor %}
