@@ -5,11 +5,69 @@ include:
   - .install
   - .service
 
+libvirt_admin.config:
+  file.managed:
+    - name: {{ libvirt_settings.libvirt_admin_config }}
+    - template: jinja
+    - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - context:
+      settings: 'libvirt:libvirt-admin'
+
 libvirt.config:
+  file.managed:
+    - name: {{ libvirt_settings.libvirt_config }}
+    - template: jinja
+    - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - context:
+      settings: 'libvirt:libvirt'
+
+libvirtd.config:
   file.managed:
     - name: {{ libvirt_settings.libvirtd_config }}
     - template: jinja
-    - source: salt://{{ slspath }}/templates/libvirtd.conf.jinja
+    - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - context:
+      settings: 'libvirt:libvirtd'
+
+lxc.config:
+  file.managed:
+    - name: {{ libvirt_settings.lxc_config }}
+    - template: jinja
+    - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - context:
+      settings: 'libvirt:lxc'
+
+qemu.config:
+  file.managed:
+    - name: {{ libvirt_settings.qemu_config }}
+    - template: jinja
+    - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - context:
+      settings: 'libvirt:qemu'
+
+qemu_lockd.config:
+  file.managed:
+    - name: {{ libvirt_settings.qemu_lockd_config }}
+    - template: jinja
+    - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - context:
+      settings: 'libvirt:qemu-lockd'
+
+virtlockd.config:
+  file.managed:
+    - name: {{ libvirt_settings.virtlockd_config }}
+    - template: jinja
+    - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - context:
+      settings: 'libvirt:virtlockd'
+
+virtlogd.config:
+  file.managed:
+    - name: {{ libvirt_settings.virtlogd_config }}
+    - template: jinja
+    - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - context:
+      settings: 'libvirt:virtlogd'
 
 libvirt.daemonconfig:
   file.managed:

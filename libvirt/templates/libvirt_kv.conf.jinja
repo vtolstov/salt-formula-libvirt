@@ -1,0 +1,10 @@
+# This file is managed by Salt, do not edit by Hand!!
+{%- for key,val in salt['pillar.get'](settings, {})|dictsort %}
+{%- if val is number %}
+{{ key }} = {{ val }}
+{%- elif val is string %}
+{{ key }} = "{{ val }}"
+{%- elif val is mapping or val is sequence %}
+{{ key }} = [ {{ ",".join(val) }} ]
+{%- endif %}
+{%- endfor %}
