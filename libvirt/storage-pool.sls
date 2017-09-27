@@ -1,15 +1,15 @@
-{%- for name, options in salt['pillar.get']('libvirt:storage-pool', {})|dictsort %}
-{%- set tname = salt.modules.temp.file(prefix='libvirt_storage_pool-'+name,parent='/tmp/') %}
-{%- if options.get('type') == 'dir' %}
-libvirt_storage_pool_prepare_{{ name }}:
+{%- for pool in salt['pillar.get']('libvirt:storage-pool', [])|sort %}
+{%- set tname = salt.modules.temp.file(prefix='libvirt_storage_pool-'+pool.get('name'),parent='/tmp/') %}
+{%- if pool.options.get('type') == 'dir' %}
+libvirt_storage_pool_prepare_{{ pool.name }}:
   file.directory:
-    - name: {{ options.get('path') }}
+    - name: {{ pool.options.get('path') }}
     - user: libvirt
     - group: libvirt
     - dir_mode: 0770
     - file_mode: 0660
 
-libvirt_storage_pool_tpl_{{ name }}:
+libvirt_storage_pool_tpl_{{ pool.name }}:
   file.managed:
     - name: {{ tname }}
     - source: salt://{{ slspath }}/templates/libvirt_storage_pool_dir.xml.jinja 
@@ -17,18 +17,18 @@ libvirt_storage_pool_tpl_{{ name }}:
     - owner: root
     - mode: 0600
     - context:
-      name: {{ name }}
-      path: {{ options.get('path') }}
-    - unless: virsh pool-info {{ name }}
+      name: {{ pool.name }}
+      path: {{ pool.options.get('path') }}
+    - unless: virsh pool-info {{ pool.name }}
 
-libvirt_storage_pool_define_{{ name }}:
+libvirt_storage_pool_define_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-define {{ tname }}
-    - unless: virsh pool-info {{ name }}
+    - unless: virsh pool-info {{ pool.name }}
 
-libvirt_storage_pool_start_{{ name }}:
+libvirt_storage_pool_start_{{ pool.name }}:
   cmd.run:
-    - name: virsh pool-start {{ name }}
-    - unless: virsh pool-info {{ name }}  | grep -q running
+    - name: virsh pool-start {{ pool.name }}
+    - unless: virsh pool-info {{ pool.name }}  | grep -q running
 {%- endif %}
 {%- endfor %}
