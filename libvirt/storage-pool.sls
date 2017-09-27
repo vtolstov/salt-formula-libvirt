@@ -3,7 +3,7 @@
 {%- if options.get('type') == 'dir' %}
 libvirt_storage_pool_prepare_{{ name }}:
   file.directory:
-    - name: /var/lib/libvirt/images/{{ options.get('path') }}
+    - name: {{ options.get('path') }}
     - user: libvirt
     - group: libvirt
     - dir_mode: 0770
