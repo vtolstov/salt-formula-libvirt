@@ -1,5 +1,5 @@
 {%- for name, options in salt['pillar.get']('libvirt:storage-pool', {})|dictsort %}
-{%- set tname salt.modules.temp.file(prefix='libvirt_storage_pool-'+name,parent='/tmp/') %}
+{%- set tname = salt.modules.temp.file(prefix='libvirt_storage_pool-'+name,parent='/tmp/') %}
 {%- if options.get('type') == 'dir' %}
 libvirt_storage_pool_prepare_{{ name }}:
   file.directory:
