@@ -4,3 +4,4 @@ include:
   - .config
   - .service
   - .keys
+  - .storage-pool
