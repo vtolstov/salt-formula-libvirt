@@ -1,5 +1,5 @@
 {%- for pool in salt['pillar.get']('libvirt:storage-pool', [])|sort %}
-{%- if pool.get('type') == 'dir' %}
+{%- if pool.type == 'dir' %}
 libvirt_storage_pool_prepare_{{ pool.name }}:
   file.directory:
     - name: {{ pool.options.get('path') }}
@@ -16,8 +16,8 @@ libvirt_storage_pool_tpl_{{ pool.name }}:
     - user: root
     - mode: 0600
     - context:
-      name: {{ pool.name }}
-      path: {{ pool.options.get('path') }}
+        name: {{ pool.name }}
+        path: {{ pool.options.get('path') }}
     - unless: virsh pool-info {{ pool.name }}
     - require:
         - file: libvirt_storage_pool_prepare_{{ pool.name }}
