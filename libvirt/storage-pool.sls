@@ -14,21 +14,25 @@ libvirt_storage_pool_tpl_{{ pool.name }}:
     - name: {{ tname }}
     - source: salt://{{ slspath }}/templates/libvirt_storage_pool_dir.xml.jinja 
     - template: jinja
-    - owner: root
+    - user: root
     - mode: 0600
     - context:
       name: {{ pool.name }}
       path: {{ pool.options.get('path') }}
     - unless: virsh pool-info {{ pool.name }}
+    - require:
+        - file: libvirt_storage_pool_prepare_{{ pool.name }}
 
 libvirt_storage_pool_define_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-define {{ tname }}
     - unless: virsh pool-info {{ pool.name }}
+    - require:
+        - file: libvirt_storage_pool_tpl_{{ pool.name }}
 
 libvirt_storage_pool_start_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-start {{ pool.name }}
-    - unless: virsh pool-info {{ pool.name }}  | grep -q running
+    - unless: virsh pool-info {{ pool.name }} | grep -q running
 {%- endif %}
 {%- endfor %}
