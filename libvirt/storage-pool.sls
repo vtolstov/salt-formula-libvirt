@@ -37,6 +37,6 @@ libvirt_storage_pool_start_{{ pool.name }}:
 libvirt_storage_pool_autostart_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-autostart {{ pool.name }}
-    - unless: virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*$'
+    - unless: virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*yes$'
 {%- endif %}
 {%- endfor %}
