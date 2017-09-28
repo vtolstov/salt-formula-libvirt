@@ -10,7 +10,7 @@ libvirt_storage_pool_prepare_{{ pool.name }}:
 
 libvirt_storage_pool_tpl_{{ pool.name }}:
   file.managed:
-    - name: {{ '/tmp/libvirt_storage_pool-'+pool.name }}
+    - name: /tmp/libvirt_storage_pool-{{ pool.name }}
     - source: salt://{{ slspath }}/templates/libvirt_storage_pool_dir.xml.jinja 
     - template: jinja
     - user: root
@@ -24,7 +24,7 @@ libvirt_storage_pool_tpl_{{ pool.name }}:
 
 libvirt_storage_pool_define_{{ pool.name }}:
   cmd.run:
-    - name: virsh pool-define {{ '/tmp/libvirt_storage_pool-'+pool.name }}
+    - name: virsh pool-define /tmp/libvirt_storage_pool-{{ pool.name }}
     - unless: virsh pool-info {{ pool.name }}
     - require:
         - file: libvirt_storage_pool_tpl_{{ pool.name }}
