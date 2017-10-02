@@ -5,8 +5,7 @@ libvirt_storage_pool_prepare_{{ pool.name }}:
     - name: {{ pool.options.get('path') }}
     - user: root
     - group: root
-    - dir_mode: 0755
-    - file_mode: 0660
+    - dir_mode: {{ pool.options.get('mode', 0770) }}
 
 libvirt_storage_pool_tpl_{{ pool.name }}:
   file.managed:
