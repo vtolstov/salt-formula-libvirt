@@ -26,6 +26,8 @@ libvirtd.config:
     - name: {{ libvirt_settings.libvirtd_config }}
     - template: jinja
     - source: salt://{{ slspath }}/templates/libvirt_kv.conf.jinja
+    - watch_in:
+      - service: libvirt.service
     - context:
       settings: 'libvirt:libvirtd'
 
