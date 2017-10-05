@@ -1,5 +1,6 @@
 # This file is managed by Salt, do not edit by Hand!!
 {% set cfg_libvirt = pillar.get('libvirt', {}) -%}
+{% set cfg_libvirtd = cfg_libvirt.get('libvirtd', {}) -%}
 {% set cfg_daemon_opts = cfg_libvirt.get('daemon_opts', {}) -%}
 {%- macro get_config(configname, default_value) -%}
 {%- if configname in cfg_daemon_opts -%}
@@ -16,7 +17,7 @@
 start_libvirtd="yes"
 
 # options passed to libvirtd, add "-l" to listen on tcp
-{{ get_config('libvirtd_opts', '{}') }}
+libvirtd_opts={{ cfg_libvirtd[configname]|json }}
 
 # pass in location of kerberos keytab
 #export KRB5_KTNAME=/etc/libvirt/libvirt.keytab
