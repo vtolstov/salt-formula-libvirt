@@ -17,7 +17,7 @@
 start_libvirtd="yes"
 
 # options passed to libvirtd, add "-l" to listen on tcp
-libvirtd_opts={{ cfg_libvirtd[configname]|json }}
+libvirtd_opts={{ cfg_libvirtd['libvirtd_opts']|json }}
 
 # pass in location of kerberos keytab
 #export KRB5_KTNAME=/etc/libvirt/libvirt.keytab
