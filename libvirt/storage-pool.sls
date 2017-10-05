@@ -1,22 +1,23 @@
 {%- for pool in salt['pillar.get']('libvirt:storage-pool', [])|sort %}
-{%- if pool.type == 'dir' %}
+{%- if pool.type == 'dir' or pool.type == 'cifs' %}
 libvirt_storage_pool_prepare_{{ pool.name }}:
   file.directory:
     - name: {{ pool.options.get('path') }}
     - user: root
     - group: root
     - dir_mode: {{ pool.options.get('mode', 0770) }}
+{%- endif %}
 
 libvirt_storage_pool_tpl_{{ pool.name }}:
   file.managed:
     - name: /tmp/libvirt_storage_pool-{{ pool.name }}
-    - source: salt://{{ slspath }}/templates/libvirt_storage_pool_dir.xml.jinja 
+    - source: salt://{{ slspath }}/templates/libvirt_storage_pool_{{ pool.type }}.xml.jinja 
     - template: jinja
     - user: root
     - mode: 0600
     - context:
         name: {{ pool.name }}
-        path: {{ pool.options.get('path') }}
+        options: {{ pool.options }}
     - unless: virsh pool-info {{ pool.name }}
     - require:
         - file: libvirt_storage_pool_prepare_{{ pool.name }}
@@ -37,5 +38,4 @@ libvirt_storage_pool_autostart_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-autostart {{ pool.name }}
     - unless: virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*yes$'
-{%- endif %}
 {%- endfor %}

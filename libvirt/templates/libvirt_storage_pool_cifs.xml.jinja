@@ -1,0 +1,11 @@
+<pool type='netfs'>
+  <source>
+    <host name='{{ options.addr }}'/>
+    <format type='cifs'/>
+    <dir path='{{ options.share }}'/>
+  </source>
+  <name>{{ name }}</name>
+  <target>
+    <path>{{ options.path }}</path>
+  </target>
+</pool>
