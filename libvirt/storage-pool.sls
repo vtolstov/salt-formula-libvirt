@@ -3,9 +3,9 @@
 libvirt_storage_pool_prepare_{{ pool.name }}:
   file.directory:
     - name: {{ pool.options.get('path') }}
-    - user: root
-    - group: root
-    - dir_mode: {{ pool.options.get('mode', 0770) }}
+    - user: {{ pool.get('user', 'libvirt-qemu') }}
+    - group: {{ pool.get('group', 'libvirt-qemu') }}
+    - dir_mode: {{ pool.get('mode', 0770) }}
 {%- endif %}
 
 libvirt_storage_pool_tpl_{{ pool.name }}:
