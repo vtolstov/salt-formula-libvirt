@@ -6,6 +6,7 @@ libvirt_storage_pool_prepare_{{ pool.name }}:
     - user: {{ pool.get('user', 'libvirt-qemu') }}
     - group: {{ pool.get('group', 'libvirt-qemu') }}
     - dir_mode: {{ pool.get('mode', '0770') }}
+    - unless: grep -q {{ pool.options.get('path') }} /proc/self/mountinfo
 {%- endif %}
 
 libvirt_storage_pool_tpl_{{ pool.name }}:
