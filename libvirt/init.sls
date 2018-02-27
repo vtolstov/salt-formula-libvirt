@@ -5,3 +5,4 @@ include:
   - .service
   - .keys
   - .storage-pool
+  - .domains
