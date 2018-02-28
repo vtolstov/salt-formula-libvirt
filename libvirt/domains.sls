@@ -21,6 +21,7 @@ libvirt_domain_start_{{ domain.name }}:
   cmd.run:
     - name: virsh start {{ domain.name }}
     - unless: virsh dominfo {{ domain.name }} | grep -q running
+    - onlyif: virsh dominfo {{ domain.name }}
 
 {%- if domain.autostart is defined %}
 {%- if domain.autostart %}
