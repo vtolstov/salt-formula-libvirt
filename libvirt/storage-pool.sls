@@ -39,7 +39,12 @@ libvirt_storage_pool_cleanup_{{ pool.name }}:
 libvirt_storage_pool_start_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-start {{ pool.name }}
-    - unless: virsh pool-info {{ pool.name }} | grep -q running
+    - unless:
+      - virsh pool-info {{ pool.name }} | grep -q running
+{%- if pool.type == 'dir' or pool.type == 'cifs' %}
+    - onlyif:
+      - grep -q {{ pool.options.get('path') }} /proc/self/mountinfo
+{%- endif %}
 
 {%- if pool.autostart is defined %}
 {%- if pool.autostart %}
