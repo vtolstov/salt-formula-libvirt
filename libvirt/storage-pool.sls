@@ -34,6 +34,7 @@ libvirt_storage_pool_cleanup_{{ pool.name }}:
   file.absent:
     - name: /tmp/libvirt_storage_pool-{{ pool.name }}
     - onlyif:
+      - test -f /tmp/libvirt_storage_pool-{{ pool.name }}
       - virsh pool-info {{ pool.name }}
 
 libvirt_storage_pool_start_{{ pool.name }}:
@@ -51,17 +52,26 @@ libvirt_storage_pool_start_{{ pool.name }}:
 libvirt_storage_pool_autostart_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-autostart {{ pool.name }}
-    - unless: virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*yes$'
+    - onlyif:
+      - virsh pool-info {{ pool.name }}
+    - unless:
+      - virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*yes$'
 {%- else %}
 libvirt_storage_pool_noautostart_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-autostart --disable {{ pool.name }}
-    - unless: virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*no$'
+    - onlyif:
+      - virsh pool-info {{ pool.name }}
+    - unless:
+      - virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*no$'
 {%- endif %}
 {%- else %}
 libvirt_storage_pool_autostart_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-autostart {{ pool.name }}
-    - unless: virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*yes$'
+    - onlyif:
+      - virsh pool-info {{ pool.name }}
+    - unless:
+      - virsh pool-info {{ pool.name }} | grep -qE 'Autostart:.*yes$'
 {%- endif %}
 {%- endfor %}
