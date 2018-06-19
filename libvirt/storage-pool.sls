@@ -19,14 +19,14 @@ libvirt_storage_pool_tpl_{{ pool.name }}:
     - context:
         name: {{ pool.name }}
         options: {{ pool.options }}
-    - unless: virsh pool-info {{ pool.name }}
+    - unless: virsh pool-info {{ pool.name }} | grep -qE 'Persistent:.*yes$'
     - require:
         - file: libvirt_storage_pool_prepare_{{ pool.name }}
 
 libvirt_storage_pool_define_{{ pool.name }}:
   cmd.run:
     - name: virsh pool-define /tmp/libvirt_storage_pool-{{ pool.name }}
-    - unless: virsh pool-info {{ pool.name }}
+    - unless: virsh pool-info {{ pool.name }} | grep -qE 'Persistent:.*yes$'
     - require:
         - file: libvirt_storage_pool_tpl_{{ pool.name }}
 
@@ -35,7 +35,7 @@ libvirt_storage_pool_cleanup_{{ pool.name }}:
     - name: /tmp/libvirt_storage_pool-{{ pool.name }}
     - onlyif:
       - test -f /tmp/libvirt_storage_pool-{{ pool.name }}
-      - virsh pool-info {{ pool.name }}
+      - virsh pool-info {{ pool.name }} | grep -qE 'Persistent:.*yes$'
 
 libvirt_storage_pool_start_{{ pool.name }}:
   cmd.run:
